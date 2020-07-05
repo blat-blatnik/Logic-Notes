@@ -1,0 +1,1314 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath,amssymb,amsthm,tikz,parskip,lplfitch}
+\usetikzlibrary{decorations.text,trees,positioning}
+
+\title{Semantic Tableaux}
+\author{Blat Blatnik}
+\date{July, 2020}
+
+\begin{document}
+\maketitle
+
+\tikzset{% 
+	l/.style={%
+		baseline, level distance = 2em
+	}
+}
+
+\section{First Order Logic (FOL)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cc}
+		\multicolumn{2}{c}{
+		 	\begin{tikzpicture}[l]
+		 	\node {$\lnot\lnot$ A}
+		 	[->]
+		 	child {node[below]{A}};
+		 	\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B}
+			[->]
+			child {node[below,align=center]{A\\[4]B}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B)}
+			[->]
+			child {node[below]{$\lnot$A}}
+			child {node[below]{$\lnot$B}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B}
+			[->]
+			child {node[below]{A}}
+			child {node[below]{B}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B)}
+			[->]
+			child {node[below,align=center]{$\lnot$A\\[4]$\lnot$B}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B}
+			[->]
+			child {node[below]{$\lnot$A}}
+			child {node[below]{B}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B)}
+			[->]
+			child {node[below,align=center]{A\\[4]$\lnot$B}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\equiv$ B}
+			[->]
+			child {node[below,align=center]{A\\[4]B}}
+			child {node[below,align=center]{$\lnot$A\\[4]$\lnot$B}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\equiv$ B)}
+			[->]
+			child {node[below,align=center]{$\lnot$A\\[4]B}}
+			child {node[below,align=center]{A\\[4]$\lnot$B}};
+		\end{tikzpicture}
+		\\
+	\end{tabular}
+\end{center}
+
+\vspace{2.0em}
+\textbf{Closure condition}: A branch of closes if it contains both A and $\lnot$A.
+
+\textbf{Counter-model procedure}: Take any open branch, if P occurs at any node in the branch, assign it 1, and if $\lnot$P occurs on any node, assign it 0.
+
+\textbf{Designated values}: $1$
+
+\pagebreak
+
+\section{First Degree Entailment (FDE)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, +}
+				[->]
+				child {node[below]{A, +}};
+			\end{tikzpicture}
+		}
+		&
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+			\node {$\lnot\lnot$ A, --}
+			[->]
+			child {node[below]{A, --}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), --}
+			[->]
+			child {node[below]{$\lnot$A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, +}
+			[->]
+			child {node[below]{A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), +}
+			[->]
+			child {node[below,align=center]{$\lnot$A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch closes if it contains both A, + and A, --.
+
+\textbf{Counter-model procedure}: Take any open branch, if P, + occurs at any node in the branch assign it P$\rho$1, and if $\lnot$P, + occurs on any node, assign it P$\rho$0.
+
+\textbf{Truth table}:
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|}
+		\hline
+		$\lnot$ & \\\hline
+		$0$ & $1$ \\
+		$n$ & $n$ \\
+		$b$ & $b$ \\
+		$1$ & $0$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|cccc|}
+		\hline
+		$\land$ & $0$ & $n$ & $b$ & $1$ \\\hline
+		$0$ & $0$ & $0$ & $0$ & $0$ \\
+		$n$ & $0$ & $n$ & $0$ & $n$ \\
+		$b$ & $0$ & $0$ & $b$ & $b$ \\
+		$1$ & $0$ & $n$ & $b$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|cccc|}
+		\hline
+		$\lor$ & $0$ & $n$ & $b$ & $1$ \\\hline
+		$0$ & $0$ & $n$ & $b$ & $1$ \\
+		$n$ & $n$ & $n$ & $1$ & $1$ \\
+		$b$ & $b$ & $1$ & $b$ & $1$ \\
+		$1$ & $1$ & $1$ & $1$ & $1$ \\\hline
+	\end{tabular}
+\end{center}
+
+\textbf{Designated values}: $1, b$
+
+\pagebreak
+
+\section{Kleene 3-valued logic (K$_3$)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, +}
+				[->]
+				child {node[below]{A, +}};
+			\end{tikzpicture}
+		}
+		&
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, --}
+				[->]
+				child {node[below]{A, --}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), --}
+			[->]
+			child {node[below]{$\lnot$A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, +}
+			[->]
+			child {node[below]{A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), +}
+			[->]
+			child {node[below,align=center]{$\lnot$A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch closes if it contains both A, + and A, -- or both A, + and $\lnot$A, +.
+
+\textbf{Counter-model procedure}: Take any open branch, if P, + occurs at any node in the branch assign it P$\rho$1, and if $\lnot$P, + occurs on any node, assign it P$\rho$0.
+
+\textbf{Truth table}:
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|}
+		\hline
+		$\lnot$ & \\\hline
+		$0$ & $1$ \\
+		$i$ & $i$ \\
+		$1$ & $0$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\land$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $0$ & $0$ \\
+		$i$ & $0$ & $i$ & $i$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\lor$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $i$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $1$ & $1$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\supset$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $1$ & $1$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+\end{center}
+
+\textbf{Designated values}: $1$
+
+\pagebreak
+
+\section{{\L}ukasiewicz 3-valued logic (\L$_3$)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, +}
+				[->]
+				child {node[below]{A, +}};
+			\end{tikzpicture}
+		}
+		&
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, --}
+				[->]
+				child {node[below]{A, --}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), --}
+			[->]
+			child {node[below]{$\lnot$A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, +}
+			[->]
+			child {node[below]{A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), +}
+			[->]
+			child {node[below,align=center]{$\lnot$A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{B, +}}
+			child {node[below,align=center]{A $\lor$ $\lnot$A, -\\[4]B $\lor$ $\lnot$B, -}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, --}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, --}}
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch closes if it contains both A, + and A, -- or both A, + and $\lnot$A, +.
+
+\textbf{Counter-model procedure}: Take any open branch, if P, + occurs at any node in the branch assign it P$\rho$1, and if $\lnot$P, + occurs on any node, assign it P$\rho$0.
+
+\textbf{Designated values}: $1$
+
+\textbf{Truth table}:
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|}
+		\hline
+		$\lnot$ & \\\hline
+		$0$ & $1$ \\
+		$i$ & $i$ \\
+		$1$ & $0$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\land$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $0$ & $0$ \\
+		$i$ & $0$ & $i$ & $i$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\lor$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $i$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $1$ & $1$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\supset$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $1$ & $1$ & $1$ \\
+		$i$ & $i$ & $1$ & $1$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+\end{center}
+
+\pagebreak
+
+\section{Logic of Paradox (LP)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, +}
+				[->]
+				child {node[below]{A, +}};
+			\end{tikzpicture}
+		}
+		&
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, --}
+				[->]
+				child {node[below]{A, --}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), --}
+			[->]
+			child {node[below]{$\lnot$A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, +}
+			[->]
+			child {node[below]{A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), +}
+			[->]
+			child {node[below,align=center]{$\lnot$A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch closes if it contains both A, + and A, -- or both A, -- and $\lnot$A, --.
+
+\textbf{Counter-model procedure}: Take any open branch, if P, -- \emph{does not} occur on any node of the branch assign it P$\rho$1, and if $\lnot$P, -- \emph{does not} occur on any node, assign it P$\rho$0.
+
+\textbf{Designated values}: $1, i$
+
+\textbf{Truth table}:
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|}
+		\hline
+		$\lnot$ & \\\hline
+		$0$ & $1$ \\
+		$i$ & $i$ \\
+		$1$ & $0$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\land$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $0$ & $0$ \\
+		$i$ & $0$ & $i$ & $i$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\lor$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $i$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $1$ & $1$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\supset$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $1$ & $1$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+\end{center}
+
+\pagebreak
+
+\section{Mix 3-valued logic (RM$_3$)}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, +}
+				[->]
+				child {node[below]{A, +}};
+			\end{tikzpicture}
+		}
+		&
+		\multicolumn{2}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, --}
+				[->]
+				child {node[below]{A, --}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), +}
+			[->]
+			child {node[below]{$\lnot$A, +}}
+			child {node[below]{$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), --}
+			[->]
+			child {node[below]{$\lnot$A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, +}
+			[->]
+			child {node[below]{A, +}}
+			child {node[below]{B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), +}
+			[->]
+			child {node[below,align=center]{$\lnot$A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, --}
+			[->]
+			child {node[below,align=center]{A, --\\[4]B, --}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), --}
+			[->]
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, +}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{$\lnot$B, --}}
+			child {node[below,align=center]{A $\land$ $\lnot$A, +\\[4]B $\land$ $\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), +}
+			[->]
+			child {node[below,align=center]{A, +\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, --}
+			[->]
+			child {node[below,align=center]{A, +\\[4]B, --}}
+			child {node[below,align=center]{$\lnot$A, --\\[4]$\lnot$B, +}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), --}
+			[->]
+			child {node[below]{A, --}}
+			child {node[below]{$\lnot$B, --}};
+		\end{tikzpicture}
+		\\
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch closes if it contains both A, + and A, -- or both A, -- and $\lnot$A, --.
+
+\textbf{Counter-model procedure}: Take any open branch, if P, -- \emph{does not} occur on any node of the branch assign it P$\rho$1, and if $\lnot$P, -- \emph{does not} occur on any node, assign it P$\rho$0.
+
+\textbf{Designated values}: $1, i$
+
+\textbf{Truth table}:
+\begin{center}
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{|c|c|}
+		\hline
+		$\lnot$ & \\\hline
+		$0$ & $1$ \\
+		$i$ & $i$ \\
+		$1$ & $0$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\land$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $0$ & $0$ \\
+		$i$ & $0$ & $i$ & $i$ \\
+		$1$ & $0$ & $i$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\lor$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $0$ & $i$ & $1$ \\
+		$i$ & $i$ & $i$ & $1$ \\
+		$1$ & $1$ & $1$ & $1$ \\\hline
+	\end{tabular}
+	\quad
+	\begin{tabular}{|c|ccc|}
+		\hline
+		$\supset$ & $0$ & $i$ & $1$ \\\hline
+		$0$ & $1$ & $1$ & $1$ \\
+		$i$ & $0$ & $i$ & $1$ \\
+		$1$ & $0$ & $0$ & $1$ \\\hline
+	\end{tabular}
+\end{center}
+
+\pagebreak
+
+\section{Basic Modal Logic}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{4}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, $i$}
+				[->]
+				child {node[below]{A, $i$}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, $i$}
+			[->]
+			child {node[below,align=center]{A, $i$\\[4] B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), $i$}
+			[->]
+			child {node[below]{$\lnot$A, $i$}}
+			child {node[below]{$\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, $i$}
+			[->]
+			child {node[below]{A, $i$}}
+			child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), $i$}
+			[->]
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, $i$}
+			[->]
+			child {node[below]{$\lnot$A, $i$}}
+			child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), $i$}
+			[->]
+			child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\equiv$ B, $i$}
+			[->]
+			child {node[below,align=center]{A, $i$\\[4] B, $i$}}
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\equiv$ B), $i$}
+			[->]
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] B, $i$}}
+			child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node[align=center] {$\Box$ A, $i$\\[4]$i$ r $j$}
+			[->]
+			child {node[below,align=center]{A, $j$\\[4](every $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot \Box$ A, $i$}
+			[->]
+			child {node[below]{$\Diamond \lnot$ A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\Diamond$ A, $i$}
+			[->]
+			child {node[below,align=center]{$i$ r $j$\\[4] A, $j$\\[4](new $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot \Diamond$ A, $i$}
+			[->]
+			child {node[below]{$\Box \lnot$ A, $i$}};
+		\end{tikzpicture}
+	\end{tabular}
+\end{center}
+
+\vspace{2.5em}
+\textbf{Closure condition}: A branch of closes if it for some $i$, A, $i$ and $\lnot$ A, $i$ occur on the same branch.
+
+\textbf{Counter-model procedure}: For each $i$ that occurs the word $w_i$ exists. If $i$ r $j$ occurs on the branch then $w_i$ R $w_j$. If P, $i$ occurs on the branch then $v_{w_i}$(P) = 1, if $\lnot$ P, i occurs on the branch then $v_{w_i}$(P) = 0. 
+
+\textbf{Extensions}
+\begin{description}
+	\item[$\rho$] reflexivity: for all $w$, $wRw$
+	\item[$\sigma$] symmetry: for all $w_1$, $w_2$, if $w_1Rw_2$, then $w_2Rw_1$
+	\item[$\tau$] transitivity: for all $w_1$, $w_2$, $w_3$, if $w_1Rw_2$ and $w_2Rw_3$, then $w_1Rw_3$
+	\item[$\eta$] extendability: for all $w_1$, there is a $w_2$ such that $w_1Rw_2$
+\end{description}
+
+\section{Tense Logic}
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+		\multicolumn{4}{c}{
+			\begin{tikzpicture}[l]
+				\node {$\lnot\lnot$ A, $i$}
+				[->]
+				child {node[below]{A, $i$}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\land$ B, $i$}
+			[->]
+			child {node[below,align=center]{A, $i$ \\[4] B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\land$ B), $i$}
+			[->]
+			child {node[below]{$\lnot$A, $i$}}
+			child {node[below]{$\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\lor$ B, $i$}
+			[->]
+			child {node[below]{A, $i$}}
+			child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\lor$ B), $i$}
+			[->]
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node {A $\supset$ B, $i$}
+			[->]
+			child {node[below]{$\lnot$A, $i$}}
+			child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\supset$ B), $i$}
+			[->]
+			child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {A $\equiv$ B, $i$}
+			[->]
+			child {node[below,align=center]{A, $i$\\[4] B, $i$}}
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$(A $\equiv$ B), $i$}
+			[->]
+			child {node[below,align=center]{$\lnot$A, $i$\\[4] B, $i$}}
+			child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node[align=center] {[F]A, $i$\\[4]$i$ r $j$}
+			[->]
+			child {node[below,align=center]{A, $j$\\[4](every $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$[F]A, $i$}
+			[->]
+			child {node[below]{$\langle$F$\rangle$$\lnot$ A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\langle$F$\rangle$A, $i$}
+			[->]
+			child {node[below,align=center]{$i$ r $j$\\[4] A, $j$\\[4] (new $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$$\langle$F$\rangle$A, $i$}
+			[->]
+			child {node[below]{[F]$\lnot$ A, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+			\node[align=center] {[P]A, $i$\\[4]$j$ r $i$}
+			[->]
+			child {node[below,align=center]{A, $j$\\[4] (every $j$)}};
+			\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$[P]A, $i$}
+			[->]
+			child {node[below]{$\langle$P$\rangle$$\lnot$ A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\langle$P$\rangle$A, $i$}
+			[->]
+			child {node[below,align=center]{$j$ r $i$\\[4] A, $j$\\[4] (new $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+			\node {$\lnot$$\langle$P$\rangle$A, $i$}
+			[->]
+			child {node[below]{[P]$\lnot$ A, $i$}};
+		\end{tikzpicture}
+	\end{tabular}
+\end{center}
+
+\vspace{3em}
+\textbf{Closure condition}: A branch of closes if it for some $i$, A, $i$ and $\lnot$ A, $i$ occur on the same branch.
+
+\textbf{Counter-model procedure}: For each $i$ that occurs the word $w_i$ exists. If $i$ r $j$ occurs on the branch then $w_i$ R $w_j$. If P, $i$ occurs on the branch then $v_{w_i}$(P) = 1, if $\lnot$ P, i occurs on the branch then $v_{w_i}$(P) = 0. If there are lines of the form $i = j$, $j = k$, $...$, we only chose one of them, like $i$, and ignore the others.
+
+\textbf{Extensions}
+\begin{description}
+	\item[$\delta$] denseness: if $iRj$ then for some $k$, $iRk$ and $kRj$ 
+	\item[$\phi$] forward convergence: if $iRj$ and $iRk$ then $jRk$ or $j = k$ or $kRj$
+	\item[$\beta$] backward convergence: if $jRi$ and $kRi$ then $jRk$ or $j = k$ or $kRj$
+\end{description}
+
+\pagebreak
+
+\section{First Order Modal Logic}
+
+\begin{center}
+	\renewcommand{\arraystretch}{2.5}
+	\begin{tabular}{cccc}
+				\multicolumn{4}{c}{
+			\begin{tikzpicture}[l]
+			\node {$\lnot\lnot$ A, $i$}
+			[->]
+			child {node[below]{A, $i$}};
+			\end{tikzpicture}
+		}
+		\\
+		\begin{tikzpicture}[l]
+		\node {A $\land$ B, $i$}
+		[->]
+		child {node[below,align=center]{A, $i$\\[4] B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot$(A $\land$ B), $i$}
+		[->]
+		child {node[below]{$\lnot$A, $i$}}
+		child {node[below]{$\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {A $\lor$ B, $i$}
+		[->]
+		child {node[below]{A, $i$}}
+		child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot$(A $\lor$ B), $i$}
+		[->]
+		child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+		\node {A $\supset$ B, $i$}
+		[->]
+		child {node[below]{$\lnot$A, $i$}}
+		child {node[below]{B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot$(A $\supset$ B), $i$}
+		[->]
+		child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {A $\equiv$ B, $i$}
+		[->]
+		child {node[below,align=center]{A, $i$\\[4] B, $i$}}
+		child {node[below,align=center]{$\lnot$A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot$(A $\equiv$ B), $i$}
+		[->]
+		child {node[below,align=center]{$\lnot$A, $i$\\[4] B, $i$}}
+		child {node[below,align=center]{A, $i$\\[4] $\lnot$B, $i$}};
+		\end{tikzpicture}
+		\\
+		\begin{tikzpicture}[l]
+		\node[align=center] {$\Box$ A, $i$\\[4]$i$ r $j$}
+		[->]
+		child {node[below,align=center]{A, $j$\\[4](every $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \Box$ A, $i$}
+		[->]
+		child {node[below]{$\Diamond \lnot$ A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\Diamond$ A, $i$}
+		[->]
+		child {node[below,align=center]{$i$ r $j$\\[4] A, $j$\\[4](new $j$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \Diamond$ A, $i$}
+		[->]
+		child {node[below]{$\Box \lnot$ A, $i$}};
+		\end{tikzpicture}
+		\\
+		\multicolumn{4}{c}{\textbf{Variable Domain}}
+		\\
+		\begin{tikzpicture}[l]
+		\node {$\forall x$ A, $i$}
+		[->]
+		child {node[below]{$A_x(a)$, $i$}}
+		child {node[below,align=center]{$\lnot$ $\mathfrak{E}a$, $i$\\[4](old $a$ if possible)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \forall x$ A, $i$}
+		[->]
+		child {node[below]{$\exists x$ $\lnot$A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\exists x$ A, $i$}
+		[->]
+		child {node[align=center,below]{$\mathfrak{E}a$, $i$\\[4]$A_x(a)$, $i$\\[4](new $a$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \exists x$ A, $i$}
+		[->]
+		child {node[below]{$\forall x$ $\lnot$A, $i$}};
+		\end{tikzpicture}
+		\\
+		\multicolumn{4}{c}{\textbf{Constant Domain}}
+		\\
+		\begin{tikzpicture}[l]
+		\node {$\forall x$ A, $i$}
+		[->]
+		child {node[align=center, below]{$A_x(a)$, $i$\\[4](old $a$ if possible)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \forall x$ A, $i$}
+		[->]
+		child {node[below]{$\exists x$ $\lnot$A, $i$}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\exists x$ A, $i$}
+		[->]
+		child {node[align=center, below]{$A_x(a)$, $i$\\[4](new $a$)}};
+		\end{tikzpicture}
+		&
+		\begin{tikzpicture}[l]
+		\node {$\lnot \exists x$ A, $i$}
+		[->]
+		child {node[below]{$\forall x$ $\lnot$A, $i$}};
+		\end{tikzpicture}
+	\end{tabular}
+\end{center}
+
+\textbf{Counter-models}:
+Need to define:
+\begin{itemize}
+	\item which objects exist in which worlds: e.g. $D(w_1) = \lbrace \partial_a, \partial_b \rbrace$
+	\item which predicates hold for which objects: e.g. $v_{w_1}(P) = \lbrace \partial_c \rbrace$
+\end{itemize}
+
+\pagebreak
+
+\section{Fuzzy Logic}
+
+\begin{align*}
+	\lnot x   &= 1 - x\\
+	x \land y &= \min(x, y)\\
+	x \lor y  &= \max(x, y)\\
+	x \lif y  &= \min(1, 1 - x + y)
+\end{align*}
+
+\textbf{Designated values}:
+$A \models_{\textrm{\L}_{0.5}}$ if $v(A) \geq 0.5$ then $v(B) \geq 0.5$\\
+Special case: \L$_{\aleph}$ - the only designated value is 1.
+
+\section{Default Logic}
+
+\[
+	\beta = \frac{\phi : \psi_1, ..., \psi_n}{\chi}
+	\textrm{ \quad for example \quad }
+	\frac{bird(X) : flies(X)}{flies(X)}
+\]
+
+where:
+\begin{description}
+	\item $pre(\delta) = \phi$ (the prerequisites of $\delta$)
+	\item $just(\delta) = \lbrace \psi_1, ..., \psi_n \rbrace$ (the justification of $\delta$)
+	\item $cons(\delta) = \chi$ (the consequence of $\delta$)
+\end{description}
+
+\subsection{Processes}
+
+\begin{description}
+	\item $\prod = (\delta_0, \delta_1, ...)$ \quad can also be empty: $()$
+	\item $Th(X) = $ all formulas that can be deduced from $X$.
+	\item $In(\prod) = Th(M)$, where $M = W \cup \lbrace\, cons(\delta) \;|\; \delta \in \prod \,\rbrace$
+	\item $Out(\prod) = Th(N)$, where $N = \lbrace\, \lnot just(\delta) \;|\; \delta \in \prod \,\rbrace$
+	\item $\prod$ is \emph{closed} iff every $\delta \in D$ that is applicable to $In(\prod)$ is also in $\prod$.
+	\item $\prod$ is \emph{successful} iff $In(\prod) \cap Out(\prod) = \emptyset$
+	\item[Extensions] A set of formulas $E$ is an extension of the default theory $T$ iff there is some closed and successful process $\prod$ of $T$ such that $E = In(\prod)$
+	\item[Skeptical consequence] $(W, D) \vdash_s \phi$ iff $\phi$ is in all extensions of $(W, D)$.
+	\item[Credulous consequence] $(W, D) \vdash_c \phi$ iff $\phi$ is in at least one extension of $(W, D)$.
+\end{description}
+
+\section{Soundness and Completeness}
+
+\subsection{Propositional Logic}
+
+$\Sigma \models A$ iff for all valuations $v$, for all $B \in \Sigma$, $v(B) = 1$, then $v(A) = 1$.
+
+$\Sigma \vdash A$ iff there is a closed tree whose initial list comprises the members of $\Sigma$ and the negation of $A$.
+
+\begin{description}
+	\item[Faithful] A valuation $v$ is \emph{faithful} to branch $b$ iff for every formula $D$ that occurs on $b$, $v(D) = 1$.
+	\item[Induced] A valuation $v$ is \emph{induced} by branch $b$, iff for every propositional parameter $p$ that occurs on $b$, $v(p) = 1$ iff $p$ is a node on $b$, and $v(p) = 0$ iff $\lnot p$ is a node on $b$.
+	\item[Soundness lemma] If $v$ is \emph{faithful} to a branch $b$, and a tableau rule is applied to $b$, then $v$ is faithful to at least \emph{one} of of the branches generated by the application of the rule.
+	\item[Completeness lemma] If branch $b$ is \emph{complete} and \emph{open}, and if $v$ is the valuation \emph{induced} by $b$, then for all formulas $D$: if $D$ is on $b$, then $v(D) = 1$, and if $\lnot D$ is on $b$, then $v(D) = 0$. 
+\end{description}
+
+\subsection{Modal Logic}
+
+Basic modal logic, extensions $K_{\rho}$, $K_{\sigma}$, $K_{\tau}$, $K_{\eta}$, and any combination of extensions are all sound \emph{and} complete.
+
+$\Sigma \models A$ iff for all valuations $v$, for all $B \in \Sigma$, $v(B) = 1$, then $v(A) = 1$.
+
+$\Sigma \vdash A$ iff there is a closed tree whose initial list comprises the members of $\Sigma$ and the negation of $A$.
+
+\begin{description}
+	
+	\item[Faithful] An interpretation $I = \langle W, R, v \rangle$ is \emph{faithful} to branch $b$ iff there is a map $f$ from $\mathbb{N}$ to $W$ such that:
+	\begin{itemize}
+		\item For every node $D, i$ on $b$, $D$ is true at world $f(i)$ in $I$.
+		\item If $i$ r $j$ is on $b$, then $f(i)Rf(j)$ is in $R$.
+	\end{itemize}
+
+	\item[Induced]  If branch $b$ is \emph{complete} and \emph{open}, $I = \langle W, R, v \rangle$ is \emph{induced} by $b$ iff:
+	\begin{itemize}
+		\item $W$ = the set of all worlds $w_i$ such that $i$ appears on b.
+		\item $w_iRw_j$ iff $i$ r $j$ occurs on b.
+		\item If $p, i$ occurs on $b$, then $v_{w_i}(p) = 1$, and if $\lnot p, i$ occurs on  $b$, then $v_{w_i}(p) = 0$.
+	\end{itemize}
+	
+	\item[Soundness lemma] If $I = \langle W, R, v \rangle$ is \emph{faithful} to branch $b$, and a tableau rule is applied to $b$, then $I$ is faithful to at least \emph{one} of of the branches generated by the application of the rule.
+	
+	\item[Completeness lemma] If branch $b$ is \emph{complete} and \emph{open}, and $I = \langle W, R, v \rangle$ is \emph{induced} by $b$, then for all formulas $D$ and for all $i$: if $D, i$ is on $b$, then $v_{w_i}(D) = 1$, and if $\lnot D, i$ is on $b$, then $v_{w_i}(D) = 0$. 
+\end{description}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
